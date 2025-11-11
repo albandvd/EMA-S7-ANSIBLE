@@ -14,10 +14,10 @@ voici les différentes machines utilisé pour cet exercice
 
 | Machine virtuelle | Adresse IP     |
 |-------------------|----------------|
-| ansible           | 192.168.56.10  |
-| rocky             | 192.168.56.20  |
-| debian            | 192.168.56.30  |
-| suse              | 192.168.56.40  |
+| controle          | 192.168.56.10  |
+| target01          | 192.168.56.20  |
+| target02          | 192.168.56.30  |
+| target03          | 192.168.56.40  |
 
 ## Methodologie
 

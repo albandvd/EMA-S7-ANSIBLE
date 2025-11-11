@@ -51,7 +51,7 @@ On commence par modifier le fichier /etc/hosts pour que les machines soient acce
 Pour verifier si la configuration à marché on peut tester de pinger les machines par leur hostname
 
 ```
-for HOST in rocky debian suse; do ping -c 1 -q $HOST; done
+for HOST in target01 target02 target03; do ping -c 1 -q $HOST; done
 ```
 
 Ici les pings fonctionnent mais la commande ping de Ansible ne fonctionne pas encore. 

@@ -10,7 +10,7 @@ L'objectif de cet exercice est de mettre en place un evironnement de test compos
 
 ## Environnement 
 
-voici les différentes machines utilisé pour cet exercice
+Voici les différentes machines utilisées pour cet exercice
 
 | Machine virtuelle | Adresse IP     |
 |-------------------|----------------|
@@ -21,13 +21,13 @@ voici les différentes machines utilisé pour cet exercice
 
 ## Methodologie
 
-On commence par lancer les machines et se connecter au Control Host  
+On commence par lancer les machines et à se connecter au Control Host
 
 ```
 vagrant up
 vagrant ssh control
 ```
-On commence par modifier le fichier /etc/hosts pour que les machines soient accesibles par leur nom d'hôte.
+On commence par modifier le fichier /etc/hosts pour que les machines soient accessibles par leur nom d’hôte.
 
 ```
 # /etc/hosts
@@ -50,7 +50,7 @@ ssh-copy-id vagrant@target02
 ssh-copy-id vagrant@target03
 ```
 
-On installe ensuite Ansible sur le contrôle host grâce au gestionnaire de paquet. On la regarde dans le fichier /etc/os-relase le nom de la distribution pour pouvoir utiliser le gestionnaire adapté 
+On installe ensuite Ansible sur le contrôle host grâce au gestionnaire de paquet. On regarde dans le fichier /etc/os-relase le nom de la distribution pour pouvoir utiliser le gestionnaire adapté 
 
 ```
 cat /etc/os-release 
@@ -65,13 +65,13 @@ sudo apt install -y ansible
 ansible --version
 ```
 
-on essaye de lancer un ping vers les différentes machines avec la commande ansible
+on essaie de lancer un ping vers les différentes machines avec la commande ansible
 
 ```
 ansible all -i target01,target02,target03 -m ping
 ```
 
-on créer ensuite un nouveau dossier avec un fichier ansible.cfg  on verifie ensuite si il est prit en compte. 
+on crée ensuite un nouveau dossier avec un fichier ansible.cfg et on vérifie s'il est pris en compte. 
 
 ```
 mkdir monprojet
@@ -86,7 +86,7 @@ ansible 2.10.8
   config file = /home/vagrant/monprojet/ansible.cfg
 ```
 
-on voit que le config file est bien le fichier que l'on vient de créer cela veut dire qu'il est bien pris en compte par Ansible
+On voit que le fichier de configuration est bien celui que l’on vient de créer, ce qui signifie qu’il est bien pris en compte par Ansible
 
 On rajoute dans le fichier ansible.cfg un inventaire et la journalisation. 
 
@@ -96,7 +96,7 @@ inventory = ./hosts
 log_path = ~/journal/ansible.log
 ```
 
-On créer le dossier journal pour quel les logs soient ajoutés automatiquement. 
+On crée le dossier journal pour que les logs soient ajoutés automatiquement.
 
 ```
 mkdir ~/journal
@@ -108,7 +108,7 @@ On lance maintenant une commande Ansible pour verifier si la journalisation marc
 ansible all -i target01,target02,target03 -m ping
 cat ../journal/ansible.log 
 ```
-on voit dans le fichier ansible.log le résultat de la commande ping, la journalisation est donc bien fonctionnelle
+On voit dans le fichier ansible.log le résultat de la commande ping, la journalisation est donc bien fonctionnelle
 
 ```
 2025-11-06 08:39:44,347 p=3440 u=vagrant n=ansible | target01 | SUCCESS => {
@@ -133,7 +133,7 @@ on voit dans le fichier ansible.log le résultat de la commande ping, la journal
     "ping": "pong"
 }
 ```
-On modifi le fichier hosts pour créer un groupe testlab ou on rajoute toutes les machines. On rajoute aussi l'insctruction permettant de spécifier l'utilisation de l'utilisateur vagrant pour se connecter aux cibles
+On modifie le fichier hosts pour créer un groupe testlab où on rajoute toutes les machines. On rajoute aussi l'instruction permettant de spécifier l'utilisation de l'utilisateur vagrant pour se connecter aux cibles
 
 ```
 [testlab]
@@ -142,7 +142,7 @@ target02
 target03
 ```
 
-on peut lancer un ping pour vérifier si le fichier host est bien pris en compte.
+On peut lancer un ping pour vérifier si le fichier host est bien pris en compte.
 
 ```
 ansible all -m ping
@@ -170,9 +170,9 @@ target03 | SUCCESS => {
 ```
 
 
-Les pings sont bien passé les hosts configurés sont donc bien pris en compte
+Les pings sont bien passés, les hôtes configurés sont donc bien pris en compte
 
-On rajoute maintenant l'insctruction permettant de spécifier l'utilisation de l'utilisateur vagrant ainsi que le passage en route pour se connecter aux machines cibles
+On ajoute maintenant l’instruction permettant de spécifier l’utilisation de l’utilisateur vagrant ainsi que le passage en root pour se connecter aux machines cibles.
 
 ```
 [testlab]
@@ -185,7 +185,7 @@ ansible_user=vagrant
 ansible_become=yes
 ```
 
-On lance une commande nous permettant d'avoir la premier ligne du fichier /etc/shadow qui permet de connaitre l'utilisateur actuel, pour verifier si les modifications ont bien été pris en compte. 
+On lance une commande nous permettant d'avoir la premier ligne du fichier /etc/shadow qui permet de connaitre l'utilisateur actuel, pour vérifier si les modifications ont bien été pris en compte. 
 
 ```
 ansible all -a "head -n 1 /etc/shadow"
@@ -197,4 +197,4 @@ target02 | CHANGED | rc=0 >>
 root:*:19977:0:99999:7:::
 ```
 
-L'utilisateur est bien root. 
+L’utilisateur est bien connecté en tant que root.

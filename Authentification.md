@@ -51,18 +51,31 @@ On commence par modifier le fichier /etc/hosts pour que les machines soient acce
 Pour verifier si la configuration à marché on peut tester de pinger les machines par leur hostname
 
 ```
-
+for HOST in rocky debian suse; do ping -c 1 -q $HOST; done
 ```
 
+Ici les pings fonctionnent mais la commande ping de Ansible ne fonctionne pas encore. 
 
-Les ping sont passé on peut donc passer 
+En effet la commande ping (linux) utilise le protocole icmp elle teste donc juste la connectivité réseaux avec une machien tandis que la commande ping (Ansible) utilise l protocole ssh pour se connecter à la machine il faut donc mettre en place l'authentification par clé ssh pour que cela fonctionne. 
+
+On commence donc par récupérer les clé des différentes machines cibles et on génère une clé ssh sur la machine hôte grâce aux commandes: 
+
+```
 ssh-keyscan -t target01 target02 target03 >> .ssh/known_hosts
 ssh-keygen
+```
 
+On peut ensuite lancer la copie des clés publics vers les machines distantes: 
+
+```
 ssh-copy-id vagrant@target01
 ssh-copy-id vagrant@target02
 ssh-copy-id vagrant@target03
+```
 
+Une fois l'authentification ssh mise en place on peut lancer la commande ping de ansible: 
+
+```
 ansible all -i target01,target02,target03 -m ping
 
 target01 | SUCCESS => {
@@ -86,3 +99,4 @@ target02 | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
+```

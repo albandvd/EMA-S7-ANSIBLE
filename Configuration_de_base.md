@@ -133,20 +133,18 @@ on voit dans le fichier ansible.log le résultat de la commande ping, la journal
     "ping": "pong"
 }
 ```
-On modifi le fichier hosts pour créer un groupe testlab ou on rajoute toutes les machines
+On modifi le fichier hosts pour créer un groupe testlab ou on rajoute toutes les machines. On rajoute aussi l'insctruction permettant de spécifier l'utilisation de l'utilisateur vagrant pour se connecter aux cibles
 
 ```
 [testlab]
 target01
 target02
 target03
-
-[testlab:vars]
-ansible_user=vagrant
 ```
 
+on peut lancer un ping pour vérifier si le fichier host est bien pris en compte.
 
-
+```
 ansible all -m ping
 target01 | SUCCESS => {
     "ansible_facts": {
@@ -169,9 +167,27 @@ target03 | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
+```
 
+
+Les pings sont bien passé les hosts configurés sont donc bien pris en compte
+
+On rajoute maintenant l'insctruction permettant de spécifier l'utilisation de l'utilisateur vagrant ainsi que le passage en route pour se connecter aux machines cibles
+
+```
+[testlab]
+target01
+target02
+target03
+
+[testlab:vars]
+ansible_user=vagrant
 ansible_become=yes
+```
 
+On lance une commande nous permettant d'avoir la premier ligne du fichier /etc/shadow qui permet de connaitre l'utilisateur actuel, pour verifier si les modifications ont bien été pris en compte. 
+
+```
 ansible all -a "head -n 1 /etc/shadow"
 target01 | CHANGED | rc=0 >>
 root:*:19977:0:99999:7:::
@@ -179,8 +195,6 @@ target03 | CHANGED | rc=0 >>
 root:*:19977:0:99999:7:::
 target02 | CHANGED | rc=0 >>
 root:*:19977:0:99999:7:::
+```
 
-exit
-logout
-Connection to 127.0.0.1 closed.
-[ema@testlab:atelier-06] $ vagrant destroy -f
+L'utilisateur est bien root. 
